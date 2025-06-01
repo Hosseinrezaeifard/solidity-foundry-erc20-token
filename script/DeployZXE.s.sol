@@ -10,6 +10,6 @@ contract DeployZXE is Script {
     function run() external {
         vm.startBroadcast();
         new ZXE(INITIAL_SUPPLY);
-        vm.startBroadcast();
+        vm.stopBroadcast();
     }
 }
