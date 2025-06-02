@@ -10,8 +10,7 @@ contract ZXETest is Test {
     ZXE public zxe;
     DeployZXE public deployer;
 
-    uint256 public constant STARTING_BALANCE =
-        100 ether; /**  100 ether == 100 * 10**18 */
+    uint256 public constant STARTING_BALANCE = 100 ether; /**  100 ether == 100 * 10**18 */
 
     address rick = makeAddr("rick");
     address morty = makeAddr("morty");
@@ -27,4 +26,20 @@ contract ZXETest is Test {
     function testRickBalance() public {
         assertEq(STARTING_BALANCE, zxe.balanceOf(rick));
     }
+
+    function testAllowances() public {
+        uint256 initialAllowance = 1000;
+
+        // rick approves morty to spend tokens on his behalf
+
+        vm.prank(rick);
+        zxe.approve(morty, initialAllowance);
+        uint256 transferAmount = 500;
+
+        vm.prank(morty);
+        zxe.transferFrom(rick, morty, transferAmount);
+        assertEq(zxe.balanceOf(morty), transferAmount);
+        assertEq(zxe.balanceOf(rick), STARTING_BALANCE - transferAmount);
+    }
+
 }
